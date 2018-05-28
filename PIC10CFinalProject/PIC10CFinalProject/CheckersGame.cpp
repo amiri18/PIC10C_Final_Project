@@ -24,7 +24,7 @@ CheckBoard::CheckBoard() : blackCount(12), whiteCount(12) {
 char CheckBoard::dis(int input) const{
     switch (input) {
         case 0:
-            return ' ';
+            return '%';
             break;
         case 1:
             return ' ';
@@ -33,7 +33,7 @@ char CheckBoard::dis(int input) const{
             return 'O';
             break;
         case 9:
-            return '@';
+            return '*';
             break;
         default:
             return ' ';
@@ -45,7 +45,12 @@ void CheckBoard::display() const{
     for (size_t i = 0; i < board.size(); ++i){
         cout << "+---+---+---+---+---+---+---+---+\n";
         for (size_t j = 0; j < board.size(); ++j){
-            cout << "| " << dis(board[i][j]) << " ";
+            if (board[i][j] == 0){
+                cout << "|%" << dis(board[i][j]) << "%";
+            }
+            else {
+                cout << "| " << dis(board[i][j]) << " ";
+            }
         }
         cout << "|\n";
     }
