@@ -1,5 +1,6 @@
 #include "CheckersGame.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symbol(sym), royal(roy), royalCount(0), startRow(0) {
@@ -130,14 +131,8 @@ void CheckBoard::move(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
         sym = 7;
         ++player.royalCount;
     }
-    
-    
-    if (board[Crow][Ccol] == player.getSym() || board[Crow][Ccol] == player.getRoy()){
-        board[Crow][Ccol] = 1;
-    }
-    if (board[Nrow][Ncol] == 1){
-        board[Nrow][Ncol] = sym;
-    }
+    board[Crow][Ccol] = 1;
+    board[Nrow][Ncol] = sym;
     player.Move(Crow, Ccol, Nrow, Ncol);
 }
 
@@ -184,4 +179,22 @@ void CheckBoard::grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
         RIPcol = Ccol - 1;
     }
     RIP(RIProw, RIPcol, player);
+}
+
+bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& player) {
+    int shift = abs(Nrow-Crow);
+    if (!(shift == 1 || shift == 2)){
+        return false;
+    }
+    if (shift == 1 || shift == 2){
+        if (!(board[Crow][Ccol] == player.getSym() || board[Crow][Ccol] == player.getRoy())){
+            return false;
+        }
+        if (board[Nrow][Ncol] != 1) {
+            return false;
+        }
+    }
+    move(Crow, Ccol, Nrow, Ncol, player);
+    return true;
+    
 }

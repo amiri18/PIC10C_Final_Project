@@ -20,8 +20,21 @@ int main() {
             cin >> Crow >> Ccol;
             cout << "New Row and New Col: ";
             cin >> Nrow >> Ncol;
-            board.move(Crow, Ccol, Nrow, Ncol, playerO);
-            board.didKill(Crow, Ccol, Nrow, Ncol, playerX);
+            if (abs(Nrow-Crow) == 4){
+                int Mrow = 0;
+                int Mcol = 0;
+                cout << "Please enter the intermediate move of your double jump.\nMiddle Row and Middle Column: ";
+                cin >> Mrow >> Mcol;
+                if (board.validMove(Crow, Ccol, Mrow, Mcol, playerO) && board.validMove(Mrow, Mcol, Nrow, Ncol, playerO)){
+                    board.didKill(Crow, Ccol, Mrow, Mcol, playerX);
+                    board.didKill(Mrow, Mcol, Nrow, Ncol, playerX);
+                }
+            }
+            else {
+                if (board.validMove(Crow, Ccol, Nrow, Ncol, playerO)){
+                    board.didKill(Crow, Ccol, Nrow, Ncol, playerX);
+                }
+            }
             board.display();
             char quit = 'N';
             cout << "To quit, enter 'Q' or press any key to continue ";
@@ -40,8 +53,21 @@ int main() {
             cin >> Crow >> Ccol;
             cout << "New Row and New Col: ";
             cin >> Nrow >> Ncol;
-            board.move(Crow, Ccol, Nrow, Ncol, playerX);
-            board.didKill(Crow, Ccol, Nrow, Ncol, playerO);
+            if (abs(Nrow-Crow) == 4){
+                int Mrow = 0;
+                int Mcol = 0;
+                cout << "Please enter the intermediate move of your double jump.\nMiddle Row and Middle Column: ";
+                cin >> Mrow >> Mcol;
+                if (board.validMove(Crow, Ccol, Mrow, Mcol, playerX) && board.validMove(Mrow, Mcol, Nrow, Ncol, playerX)){
+                    board.didKill(Crow, Ccol, Mrow, Mcol, playerO);
+                    board.didKill(Mrow, Mcol, Nrow, Ncol, playerO);
+                }
+            }
+            else {
+                if (board.validMove(Crow, Ccol, Nrow, Ncol, playerX)){
+                    board.didKill(Crow, Ccol, Nrow, Ncol, playerO);
+                }
+            }
             board.display();
             char quit = 'N';
             cout << "To quit, enter 'Q' or press any key to continue ";
