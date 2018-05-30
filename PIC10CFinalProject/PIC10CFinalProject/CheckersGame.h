@@ -39,14 +39,14 @@ private:
     char dis(int input) const;
     void RIP(int row, int col, Player& player);
     void grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player);
-public:
-    CheckBoard();
-    void updateBoard(int row, int col, int sym);
-    void display() const;
-    bool taken(int row, int col, int sym) const;
     void didKill(int Crow, int Ccol, int Nrow, int Ncol, Player& player);
     void move(int Crow, int Ccol, int Nrow, int Ncol, Player& player);
-    bool validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& player);
+    bool taken(int row, int col, int sym) const;
+public:
+    CheckBoard();
+    //void updateBoard(int row, int col, int sym);
+    void display() const;
+    bool validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPlayer, Player& opponent);
     
     friend Player;
 };

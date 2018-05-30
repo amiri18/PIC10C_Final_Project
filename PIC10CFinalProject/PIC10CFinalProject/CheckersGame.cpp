@@ -97,7 +97,10 @@ char CheckBoard::dis(int input) const{
     }
 }
 
-void CheckBoard::display() const{
+void
+
+
+CheckBoard::display() const{
     cout << "    0   1   2   3   4   5   6   7\n";
     for (size_t i = 0; i < board.size(); ++i){
         cout << "  +---+---+---+---+---+---+---+---+\n";
@@ -138,7 +141,7 @@ void CheckBoard::move(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
 
 void CheckBoard::RIP(int row, int col, Player& player){
     int sym = board[row][col];
-    cout << "RIP spot: (" << row << "," << col << ")\n";
+    //cout << "RIP spot: (" << row << "," << col << ")\n";
     board[row][col] = 1;
     pair<int, int> p = make_pair(row, col);
     switch (sym) {
@@ -181,20 +184,24 @@ void CheckBoard::grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
     RIP(RIProw, RIPcol, player);
 }
 
-bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& player) {
+bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPlayer, Player& opponent) {
     int shift = abs(Nrow-Crow);
     if (!(shift == 1 || shift == 2)){
+        cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
         return false;
     }
     if (shift == 1 || shift == 2){
-        if (!(board[Crow][Ccol] == player.getSym() || board[Crow][Ccol] == player.getRoy())){
+        if (!(board[Crow][Ccol] == curPlayer.getSym() || board[Crow][Ccol] == curPlayer.getRoy())){
+            cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
             return false;
         }
         if (board[Nrow][Ncol] != 1) {
+            cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
             return false;
         }
     }
-    move(Crow, Ccol, Nrow, Ncol, player);
+    move(Crow, Ccol, Nrow, Ncol, curPlayer);
+    didKill(Crow, Ccol, Nrow, Ncol, opponent);
     return true;
     
 }
