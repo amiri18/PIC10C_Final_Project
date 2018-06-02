@@ -42,6 +42,8 @@ int main() {
         }
         else {
             do {
+                playerX.cantMove(board);
+                cout << endl;
                 cout << "Where do you want to move Player X?\nCurrent Row and Current Column: ";
                 cin >> Crow >> Ccol;
                 cout << "New Row and New Col: ";

@@ -27,6 +27,9 @@ public:
     int getRoy() const;
     void Move(int Crow, int Ccol, int Nrow, int Ncol);
     
+    
+    void cantMove(const CheckBoard& board);
+    void displayPieceLoc() const;
     friend CheckBoard;
 };
 
@@ -47,9 +50,18 @@ public:
     //void updateBoard(int row, int col, int sym);
     void display() const;
     bool validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPlayer, Player& opponent);
+    vector<vector<int>> getBoard() const;
     
     friend Player;
 };
 
+int det_no_move(const vector<vector<int>>& board, const pair<int,int>& piece);
+int det_safe_move(const vector<vector<int>>& board, const pair<int,int>& piece);
+//pair<int,int> safeMove(const vector<vector<int>>& board, const pair<int,int>& piece);
+int det_willGetDJ(const vector<vector<int>>& board, const pair<int,int>& piece);
+int det_DJ(const vector<vector<int>>& board, const pair<int,int>& piece);
+
+ostream& operator<<(ostream& out, const pair<int,int>& coord);
+ostream& operator<<(ostream& out, const vector<pair<int,int>>& pieces);
 
 #endif 

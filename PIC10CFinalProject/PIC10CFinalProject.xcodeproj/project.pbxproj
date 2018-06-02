@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		413B756320BB9F4F0035A20C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413B756220BB9F4F0035A20C /* main.cpp */; };
 		413B756A20BB9FD30035A20C /* CheckersGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413B756920BB9FD30035A20C /* CheckersGame.cpp */; };
+		4158FEC720C07CC600985304 /* CheckAI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4158FEC620C07CC600985304 /* CheckAI.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 		413B756220BB9F4F0035A20C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		413B756920BB9FD30035A20C /* CheckersGame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CheckersGame.cpp; sourceTree = "<group>"; };
 		413B756B20BB9FF90035A20C /* CheckersGame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CheckersGame.h; sourceTree = "<group>"; };
+		4158FEC620C07CC600985304 /* CheckAI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CheckAI.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				413B756220BB9F4F0035A20C /* main.cpp */,
 				413B756920BB9FD30035A20C /* CheckersGame.cpp */,
+				4158FEC620C07CC600985304 /* CheckAI.cpp */,
 				413B756B20BB9FF90035A20C /* CheckersGame.h */,
 			);
 			path = PIC10CFinalProject;
@@ -126,6 +129,7 @@
 			files = (
 				413B756320BB9F4F0035A20C /* main.cpp in Sources */,
 				413B756A20BB9FD30035A20C /* CheckersGame.cpp in Sources */,
+				4158FEC720C07CC600985304 /* CheckAI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -59,6 +59,16 @@ void Player::ate(const pair<int,int>& coord){
     }
 }
 
+void Player::displayPieceLoc() const{
+    cout << location;
+}
+
+void Player::cantMove(const CheckBoard& board){
+    for (size_t i = 0; i < location.size(); ++i){
+        cout << location[i] << ": " << det_no_move(board.getBoard(), location[i]) << " ";
+    }
+}
+
 CheckBoard::CheckBoard() : nineCount(12), eightCount(12) {
     vector<int> row1 = {0,9,0,9,0,9,0,9};
     vector<int> row2 = {9,0,9,0,9,0,9,0};
@@ -205,3 +215,12 @@ bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPl
     return true;
     
 }
+
+vector<vector<int>> CheckBoard::getBoard() const{
+    return board;
+}
+
+
+
+
+
