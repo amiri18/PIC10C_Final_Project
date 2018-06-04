@@ -18,7 +18,6 @@ Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symb
             }
         }
     }
-    
 }
 
 int Player::avaliableSpots(const CheckBoard& board) const{
@@ -63,9 +62,18 @@ void Player::displayPieceLoc() const{
     cout << location;
 }
 
-void Player::cantMove(const CheckBoard& board){
+void Player::det_moves(const vector<vector<int>>& board){
+    moves.clear();
+    pair<int, vector<pair<int,int>> > tempP;
     for (size_t i = 0; i < location.size(); ++i){
-        cout << location[i] << ": " << det_no_move(board.getBoard(), location[i]) << " ";
+        tempP = det_NM(board, location[i]);
+        moves.insert(tempP);
+    }
+}
+
+void Player::getMoves() const {
+    for (auto itr = moves.begin(); itr != moves.end(); ++itr){
+        cout << itr->first << " -> " << itr->second << endl;
     }
 }
 
@@ -219,8 +227,3 @@ bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPl
 vector<vector<int>> CheckBoard::getBoard() const{
     return board;
 }
-
-
-
-
-

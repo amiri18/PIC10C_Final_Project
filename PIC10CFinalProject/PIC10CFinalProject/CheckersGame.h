@@ -5,11 +5,13 @@
 #include <vector>
 #include <string>
 #include <utility>
+#include <map>
 
 using namespace std;
 
 class CheckBoard;
 
+// should make this derivated ... later
 class Player {
 private:
     int pieceCount;
@@ -18,6 +20,7 @@ private:
     int royalCount;
     int startRow;
     vector<pair<int, int>> location;
+    multimap<int, vector<pair<int,int>> > moves;
     
     void ate(const pair<int,int>& coord);
 public:
@@ -26,9 +29,9 @@ public:
     int getSym() const;
     int getRoy() const;
     void Move(int Crow, int Ccol, int Nrow, int Ncol);
+    void det_moves(const vector<vector<int>>& board);
     
-    
-    void cantMove(const CheckBoard& board);
+    void getMoves() const;
     void displayPieceLoc() const;
     friend CheckBoard;
 };
@@ -55,12 +58,18 @@ public:
     friend Player;
 };
 
-int det_no_move(const vector<vector<int>>& board, const pair<int,int>& piece);
-int det_safe_move(const vector<vector<int>>& board, const pair<int,int>& piece);
-//pair<int,int> safeMove(const vector<vector<int>>& board, const pair<int,int>& piece);
-int det_willGetDJ(const vector<vector<int>>& board, const pair<int,int>& piece);
-int det_DJ(const vector<vector<int>>& board, const pair<int,int>& piece);
 
+
+
+pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<int, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<int, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<int, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<int, vector<pair<int,int>> > det_NM(const vector<vector<int>>& board, const pair<int,int>& piece);
+
+pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair<int, vector<pair<int,int>>>& stuff);
+//pair<int,int> safeMove(const vector<vector<int>>& board, const pair<int,int>& piece);
 ostream& operator<<(ostream& out, const pair<int,int>& coord);
 ostream& operator<<(ostream& out, const vector<pair<int,int>>& pieces);
 
