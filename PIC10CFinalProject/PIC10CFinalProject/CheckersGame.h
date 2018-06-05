@@ -21,6 +21,10 @@ private:
     int pieceCount;
     // count of royal pieces
     int royalCount;
+    // initial location
+    pair<int,int> Cur;
+    // new location
+    pair<int,int> New;
 
     // stores the location of the pieces
     vector<pair<int, int>> location;
@@ -88,8 +92,14 @@ public:
      debugging fuction of the AI that display's playerX's moves
      */
     void getMoves() const;
+    
+    /**
+     display's the player's move
+     */
+    void displayMove() const;
     // make the classes friends
     friend CheckBoard;
+    
 };
 
 class CheckBoard{

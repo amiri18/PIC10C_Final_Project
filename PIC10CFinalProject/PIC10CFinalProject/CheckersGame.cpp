@@ -5,8 +5,9 @@
 #include <cstdlib>
 using namespace std;
 
+// player constructor
 Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symbol(sym), royal(roy), royalCount(0) {
-    
+    // go through the whole board and push back all of the piece locations
     for (int i = 0; i < 8; ++i){
         for (int j = 0; j < 8; ++j){
             if (check.taken(i, j, getSym())){
@@ -15,43 +16,66 @@ Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symb
             }
         }
     }
+    Cur = location[0];
+    New = Cur;
 }
 
+// retrieve sym value
 int Player::getSym() const {
     return symbol;
 }
 
+// retrieve royal value
 int Player::getRoy() const {
     return royal;
 }
 
+// update the class when a piece moves
 void Player::Move(int Crow, int Ccol, int Nrow, int Ncol) {
     for (int i = 0; i < location.size(); ++i){
+        // find the piece that moved
         if (location[i].first == Crow && location[i].second == Ccol){
+            // update current location
+            Cur = location[i];
+            
+            // put in its new location
             location[i].first = Nrow;
             location[i].second = Ncol;
+            
+            // update new location
+            New = location[i];
         }
     }
 }
 
+// if the player got jumped
 void Player::ate(const pair<int,int>& coord){
+    // find the piece that got jumped
     for (int i = 0; i < location.size(); ++i){
         if (location[i] == coord){
+            // removed it from the vector
             location.erase(location.begin()+i);
-            
         }
     }
 }
 
+// determine the best moves for each piece and store them
 void Player::det_moves(const vector<vector<int>>& board){
-    moves.clear();
+    
+    moves.clear(); // clear past stored moves
     pair<int, vector<pair<int,int>> > tempP;
+    
+    // for each piece
     for (size_t i = 0; i < location.size(); ++i){
+        // temporarily store the move and its value
         tempP = det_NM(board, location[i]);
+        // then push it into the ordered map
+        // which puts the best moves at the front
         moves.insert(tempP);
     }
 }
 
+// debugging function
 void Player::getMoves() const {
     for (auto itr = moves.begin(); itr != moves.end(); ++itr){
         cout << itr->first << " -> " << itr->second << endl;
@@ -92,6 +116,10 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
         }
     }
+}
+
+void Player::displayMove() const{
+    cout << "piece " << Cur << " moved to " << New << endl;
 }
 
 CheckBoard::CheckBoard() : nineCount(12), eightCount(12) {
