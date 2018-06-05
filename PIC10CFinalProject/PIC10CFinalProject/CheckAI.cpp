@@ -604,20 +604,6 @@ pair<int, vector<pair<int,int>> > det_NM(const vector<vector<int>>& board, const
     return det_DJ(board, stuff);
 }
 
-
-
-ostream& operator<<(ostream& out, const pair<int,int>& coord){
-    out << '(' << coord.first << ',' << coord.second << ')';
-    return out;
-}
-
-ostream& operator<<(ostream& out, const vector<pair<int,int>>& pieces){
-    for (size_t i = 0; i < pieces.size(); ++i){
-        out << pieces[i] << " ";
-    }
-    return out;
-}
-
 pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair<int, vector<pair<int,int>>>& stuff){
     
     if (stuff.first == 8){
@@ -719,4 +705,16 @@ pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair
     
     
     return stuff;
+}
+
+ostream& operator<<(ostream& out, const pair<int,int>& coord){
+    out << '(' << coord.first << ',' << coord.second << ')';
+    return out;
+}
+
+ostream& operator<<(ostream& out, const vector<pair<int,int>>& pieces){
+    for (size_t i = 0; i < pieces.size(); ++i){
+        out << pieces[i] << " ";
+    }
+    return out;
 }

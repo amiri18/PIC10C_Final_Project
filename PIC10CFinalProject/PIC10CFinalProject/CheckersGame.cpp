@@ -1,15 +1,12 @@
 #include "CheckersGame.h"
 #include <iostream>
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 using namespace std;
 
-Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symbol(sym), royal(roy), royalCount(0), startRow(0) {
-    if (sym == 8){
-        startRow = 7;
-    }
-    else {
-        startRow = 0;
-    }
+Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symbol(sym), royal(roy), royalCount(0) {
+    
     for (int i = 0; i < 8; ++i){
         for (int j = 0; j < 8; ++j){
             if (check.taken(i, j, getSym())){
@@ -18,18 +15,6 @@ Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symb
             }
         }
     }
-}
-
-int Player::avaliableSpots(const CheckBoard& board) const{
-    int count = 0;
-    for (int i = 0; i < 8; ++i){
-        for (int j = 0; j < 8; ++j){
-            if (board.taken(i, j, 1)){
-                ++count;
-            };
-        }
-    }
-    return count;
 }
 
 int Player::getSym() const {
@@ -58,10 +43,6 @@ void Player::ate(const pair<int,int>& coord){
     }
 }
 
-void Player::displayPieceLoc() const{
-    cout << location;
-}
-
 void Player::det_moves(const vector<vector<int>>& board){
     moves.clear();
     pair<int, vector<pair<int,int>> > tempP;
@@ -74,6 +55,42 @@ void Player::det_moves(const vector<vector<int>>& board){
 void Player::getMoves() const {
     for (auto itr = moves.begin(); itr != moves.end(); ++itr){
         cout << itr->first << " -> " << itr->second << endl;
+    }
+}
+
+void Player::pickMove(CheckBoard& check, Player& playerO){
+    auto itr = moves.begin();
+    auto it = ++moves.begin();
+    if ((*itr).first == 7){
+        cout << "playerX cannot move.\n";
+    }
+    else if ((*itr).first != (*it).first){
+        if ((*itr).first == 1){
+            check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+            check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
+        }
+        else {
+            check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+        }
+
+    }
+    else {
+        size_t countRepeats = 0;
+        while ((*itr).first == (*it).first && it != moves.end()){
+            ++countRepeats;
+            ++it;
+        }
+        int r = 0 + rand() % countRepeats;
+        for (size_t i = 0; i < r; ++i){
+            ++itr;
+        }
+        if ((*itr).first == 1){
+            check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+            check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
+        }
+        else {
+            check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+        }
     }
 }
 
@@ -99,7 +116,7 @@ CheckBoard::CheckBoard() : nineCount(12), eightCount(12) {
 char CheckBoard::dis(int input) const{
     switch (input) {
         case 0:
-            return ' ';
+            return '%';
         case 1:
             return ' ';
         case 8:
@@ -124,7 +141,12 @@ CheckBoard::display() const{
         cout << "  +---+---+---+---+---+---+---+---+\n";
         cout << i << " ";
         for (size_t j = 0; j < board.size(); ++j){
-            cout << "| " << dis(board[i][j]) << " ";
+            if (board[i][j] == 0){
+                cout << "|%" << dis(board[i][j]) << "%";
+            }
+            else {
+                cout << "| " << dis(board[i][j]) << " ";
+            }
         }
         cout << "|\n";
     }
@@ -203,6 +225,10 @@ void CheckBoard::grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
 }
 
 bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPlayer, Player& opponent) {
+    if (board[Crow][Ccol] == opponent.getRoy() || board[Crow][Ccol] == opponent.getSym()){
+        return false;
+    }
+    
     int shift = abs(Nrow-Crow);
     if (!(shift == 1 || shift == 2)){
         cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
@@ -226,4 +252,18 @@ bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPl
 
 vector<vector<int>> CheckBoard::getBoard() const{
     return board;
+}
+
+bool CheckBoard::pieceCountZero() const{
+    if (nineCount == 0){
+        cout << "Player O won!";
+        return true;
+    }
+    else if (eightCount == 0){
+        cout << "Player X won!";
+        return true;
+    }
+    else{
+        return false;
+    }
 }

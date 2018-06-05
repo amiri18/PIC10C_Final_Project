@@ -1,17 +1,22 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include "CheckersGame.h"
 
 using namespace std;
 
 int main() {
+    // seed the random function
+    srand(static_cast<unsigned int>(time(NULL)));
+    
     CheckBoard board;
     Player playerO(8, 6, board);
     Player playerX(9, 7, board);
     bool keepGoing = true;
     board.display();
-    size_t count = 0;
-    while (keepGoing){
+    size_t count = 1;
+    while (keepGoing && !board.pieceCountZero()){
         int Crow, Ccol, Nrow, Ncol = 0;
         if (count%2 == 1){
             do {
@@ -41,25 +46,10 @@ int main() {
             ++count;
         }
         else {
-            do {
-                playerX.det_moves(board.getBoard());
-                playerX.getMoves();
-                cout << "Where do you want to move Player X?\nCurrent Row and Current Column: ";
-                cin >> Crow >> Ccol;
-                cout << "New Row and New Col: ";
-                cin >> Nrow >> Ncol;
-                
-                if (abs(Nrow-Crow) == 4){
-                    int Mrow, Mcol = 0;
-                    cout << "Please enter the intermediate move of your double jump.\nMiddle Row and Middle Column: ";
-                    cin >> Mrow >> Mcol;
-                    if (board.validMove(Crow, Ccol, Mrow, Mcol, playerX, playerO) && board.validMove(Mrow, Mcol, Nrow, Ncol, playerX, playerO)){
-                       break;
-                    }
-                }
-            }
-            while (!board.validMove(Crow, Ccol, Nrow, Ncol, playerX, playerO));
-            
+            cout << "It's playerX's move: \n";
+            playerX.det_moves(board.getBoard());
+            playerX.getMoves();
+            playerX.pickMove(board, playerO);
             board.display();
             char quit = ' ';
             cout << "To quit, enter 'Q' or press any key to continue. ";
