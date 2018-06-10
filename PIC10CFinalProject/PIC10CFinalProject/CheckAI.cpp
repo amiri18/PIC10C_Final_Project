@@ -1,97 +1,57 @@
 #include "CheckersGame.h"
-#include <iostream>
 #include <cmath>
 using namespace std;
 
+/****************************************/
+/*            AI functions!!!           */
+/*                                      */
+/*  key value 1: can double jump        */
+/*  key value 2: will be double jumped  */
+/*  key value 3: can jump               */
+/*  key value 4: will be jumped         */
+/*  key value 5: safe move              */
+/*  key value 6: risky move             */
+/*                                      */
+/****************************************/
+
+// determines if the Player X can double jump Player O
 pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>> >& stuff){
+    // if recursion has NOT happened...
     if (stuff.first != 8){
+        // set the key value to 1!
         stuff.first = 1;
     }
-    
+    // potential future moves
     pair<int,int> mid;
     pair<int,int> end;
-    
+    // get the current location
     int row = stuff.second[0].first;
     int col = stuff.second[0].second;
-    // if the piece is in the top left quarter of the board:
-    if (row < 4 && col < 4){
-        // check down right 2jump
-        if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+3] == 8 || board[row+3][col+3] == 6) && board[row+4][col+4] == 1){
-            mid = make_pair(row+2, col+2);
-            end = make_pair(row+4, col+4);
-            stuff.second.push_back(mid);
-            stuff.second.push_back(end);
-            return stuff;
-        } // check straight down right 2jump
-        if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+1] == 8 || board[row+3][col+1] == 6) && board[row+4][col] == 1){
-            mid = make_pair(row+2, col+2);
-            end = make_pair(row+4, col);
-            stuff.second.push_back(mid);
-            stuff.second.push_back(end);
-            return stuff;
-        } // if the piece is in the third or fourth column
-        if (col == 3 || col == 2){
-            // check straight down left 2jump
-            if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-1] == 8 || board[row+3][col-1] == 6) && board[row+4][col] == 1){
-                mid = make_pair(row+2, col-2);
-                end = make_pair(row+4, col);
-                stuff.second.push_back(mid);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-        }
-    }
-    // if the piece is in the top right quarter of the board:
-    if (row < 4 && col > 3){
-        // check down left 2jump
-        if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-3] == 8 || board[row+3][col-3] == 6) && board[row+4][col-4] == 1){
-            mid = make_pair(row+2, col-2);
-            end = make_pair(row+4, col-4);
-            stuff.second.push_back(mid);
-            stuff.second.push_back(end);
-            return stuff;
-        } // check straight down left 2jump
-        if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-1] == 8 || board[row+3][col-1] == 6) && board[row+4][col] == 1){
-            mid = make_pair(row+2, col-2);
-            end = make_pair(row+4, col);
-            stuff.second.push_back(mid);
-            stuff.second.push_back(end);
-            return stuff;
-        } // if the piece is in the fifth or sixth column
-        if (col == 4 || col == 5){
-            // check straight down right 2jump
-            if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+1] == 8 || board[row+3][col+1] == 6) && board[row+4][col] == 1){
-                mid = make_pair(row+2, col+2);
-                end = make_pair(row+4, col);
-                stuff.second.push_back(mid);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-        }
-    }
-    /////////////////////////////////////////////////////////////
-    // if the piece is a K, need to check the opposite direction!
+    
+    /***** if the piece is a K *****/
+    
     if (board[row][col] == 7) {
+        
         // if the piece is in the bottom left quarter of the board:
         if (row > 3 && col < 4){
             // check up right 2jump
-            if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+3] == 8 || board[row-3][col+3] == 6) && board[row-4][col+4] == 1){
+            if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+3] == 8 || board[row-3][col+3] == 6) && board[row-4][col+4] == 1){ // get the moves, store them, return them
                 mid = make_pair(row-2, col+2);
                 end = make_pair(row-4, col+4);
                 stuff.second.push_back(mid);
                 stuff.second.push_back(end);
                 return stuff;
             } // check straight up right 2jump
-            if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+1] == 8 || board[row-3][col+1] == 6) && board[row-4][col] == 1){
+            if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+1] == 8 || board[row-3][col+1] == 6) && board[row-4][col] == 1){ // get the moves, store them, return them
                 mid = make_pair(row-2, col+2);
                 end = make_pair(row-4, col);
                 stuff.second.push_back(mid);
                 stuff.second.push_back(end);
                 return stuff;
-            } // if the piece is in the third or fourth column
+            } // if the piece is in the third or fourth column:
             if (col == 3 || col == 2){
                 // check straight up left 2jump
-                if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-1] == 8 || board[row-3][col-1] == 6) && board[row-4][col] == 1){
+                if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-1] == 8 || board[row-3][col-1] == 6) && board[row-4][col] == 1){ // get the moves, store them, return them
                     mid = make_pair(row-2, col-2);
                     end = make_pair(row-4, col);
                     stuff.second.push_back(mid);
@@ -100,17 +60,18 @@ pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<
                 }
             }
         }
+        
         // if the piece is in the bottom right quarter of the board:
         if (row > 3 && col > 3){
             // check up left 2jump
-            if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-3] == 8 || board[row-3][col-3] == 6) && board[row-4][col-4] == 1){
+            if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-3] == 8 || board[row-3][col-3] == 6) && board[row-4][col-4] == 1){ // get the moves, store them, return them
                 mid = make_pair(row-2, col-2);
                 end = make_pair(row-4, col-4);
                 stuff.second.push_back(mid);
                 stuff.second.push_back(end);
                 return stuff;
             } // check straight up left 2jump
-            if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-1] == 8 || board[row-3][col-1] == 6) && board[row-4][col] == 1){
+            if ((board[row-1][col-1] == 8 || board[row-1][col-1] == 6) && board[row-2][col-2] == 1 && (board[row-3][col-1] == 8 || board[row-3][col-1] == 6) && board[row-4][col] == 1){ // get the moves, store them, return them
                 mid = make_pair(row-2, col-2);
                 end = make_pair(row-4, col);
                 stuff.second.push_back(mid);
@@ -119,7 +80,7 @@ pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<
             } // if the piece is in the fifth or sixth column
             if (col == 4 || col == 5){
                 // check straight up right 2jump
-                if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+1] == 8 || board[row-3][col+1] == 6) && board[row-4][col] == 1){
+                if ((board[row-1][col+1] == 8 || board[row-1][col+1] == 6) && board[row-2][col+2] == 1 && (board[row-3][col+1] == 8 || board[row-3][col+1] == 6) && board[row-4][col] == 1){ // get the moves, store them, return them
                     mid = make_pair(row-2, col+2);
                     end = make_pair(row-4, col);
                     stuff.second.push_back(mid);
@@ -128,17 +89,83 @@ pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<
                 }
             }
         }
+    } /***** if the piece is a K OR an X *****/
+    
+    // if the piece is in the top left quarter of the board:
+    if (row < 4 && col < 4){
+        // check down right 2jump
+        if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+3] == 8 || board[row+3][col+3] == 6) && board[row+4][col+4] == 1){ // get the moves, store them, return them
+            mid = make_pair(row+2, col+2);
+            end = make_pair(row+4, col+4);
+            stuff.second.push_back(mid);
+            stuff.second.push_back(end);
+            return stuff;
+        } // check straight down right 2jump
+        if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+1] == 8 || board[row+3][col+1] == 6) && board[row+4][col] == 1){ // get the moves, store them, return them
+            mid = make_pair(row+2, col+2);
+            end = make_pair(row+4, col);
+            stuff.second.push_back(mid);
+            stuff.second.push_back(end);
+            return stuff;
+        } // if the piece is in the third or fourth column
+        if (col == 3 || col == 2){
+            // check straight down left 2jump
+            if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-1] == 8 || board[row+3][col-1] == 6) && board[row+4][col] == 1){ // get the moves, store them return them
+                mid = make_pair(row+2, col-2);
+                end = make_pair(row+4, col);
+                stuff.second.push_back(mid);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+        }
     }
+    
+    // if the piece is in the top right quarter of the board:
+    if (row < 4 && col > 3){
+        // check down left 2jump
+        if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-3] == 8 || board[row+3][col-3] == 6) && board[row+4][col-4] == 1){ // get the moves, store them, return them
+            mid = make_pair(row+2, col-2);
+            end = make_pair(row+4, col-4);
+            stuff.second.push_back(mid);
+            stuff.second.push_back(end);
+            return stuff;
+        } // check straight down left 2jump
+        if ((board[row+1][col-1] == 8 || board[row+1][col-1] == 6) && board[row+2][col-2] == 1 && (board[row+3][col-1] == 8 || board[row+3][col-1] == 6) && board[row+4][col] == 1){ // get the moves, store them, return them
+            mid = make_pair(row+2, col-2);
+            end = make_pair(row+4, col);
+            stuff.second.push_back(mid);
+            stuff.second.push_back(end);
+            return stuff;
+        } // if the piece is in the fifth or sixth column
+        if (col == 4 || col == 5){
+            // check straight down right 2jump
+            if ((board[row+1][col+1] == 8 || board[row+1][col+1] == 6) && board[row+2][col+2] == 1 && (board[row+3][col+1] == 8 || board[row+3][col+1] == 6) && board[row+4][col] == 1){ // get the moves, store them, return them
+                mid = make_pair(row+2, col+2);
+                end = make_pair(row+4, col);
+                stuff.second.push_back(mid);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+        }// if the piece cannot double jump,
+    }// go on to see if it will get double jumped
     return det_WGDJ(board, stuff);
 }
 
+
+
+
+// determines if the Player X will get double jumped by Player O
 pair<int, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff){
-    if (stuff.first != 8){
+    // if recursion has NOT happened...
+    if (stuff.first == 1){
+        // set the key value to 2
         stuff.first = 2;
     }
     
+    // get the current location
     int row = stuff.second[0].first;
     int col = stuff.second[0].second;
+    
     // if the piece is at the bottom left quarter of the board:
     if (row > 2 && row < 7 && col > 0 && col < 5){
         // if the piece can get up right 2jumped
@@ -202,11 +229,16 @@ pair<int, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pai
             return find_best_move(board, stuff);
         }
     }
-    return det_J(board, stuff);
+    if (stuff.first == 7){
+        return det_WGJ(board, stuff);
+    }
+    else {
+        return det_J(board, stuff);
+    }
 }
 
 pair<int, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff){
-    if (stuff.first != 8){
+    if (stuff.first == 2){
         stuff.first = 3;
     }
     
@@ -256,7 +288,7 @@ pair<int, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<i
 }
 
 pair<int, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff){
-    if (stuff.first != 8){
+    if (stuff.first == 3){
         stuff.first = 4;
     }
     
@@ -279,11 +311,16 @@ pair<int, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair
             return find_best_move(board, stuff);
         }
     }
-    return det_SM(board, stuff);
+    if (stuff.first == 7) {
+        return stuff;
+    }
+    else {
+        return det_SM(board, stuff);
+    }
 }
 
 pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff){
-    if (stuff.first != 8){
+    if (stuff.first == 4){
         stuff.first = 5;
     }
     
@@ -316,8 +353,14 @@ pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<
         end = make_pair(row+1, col+1);
         stuff.second.push_back(end);
         return stuff;
-    } // check safe move right in middle of board:
-    if (row < 6 && col < 6 && board[row+1][col+1] == 1 && board[row+2][col+2] == 1) {
+    } ////////// NEW
+    if (row < 6 && col == 6 && board[row+1][col-1] == 1 && board[row+2][col-2]%2 != 0 && board[row+1][col+1] == 1) {
+        end = make_pair(row+1, col+1);
+        stuff.second.push_back(end);
+        return stuff;
+    } ///////////////
+    // check safe move right in middle of board:
+    if (row < 6 && col < 6 && board[row+1][col+1] == 1 && board[row+2][col+2]%2 != 0) {
         if (board[row+2][col] == 1 && board[row][col+2] == 1){
             end = make_pair(row+1, col+1);
             stuff.second.push_back(end);
@@ -338,17 +381,17 @@ pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<
             stuff.second.push_back(end);
             return stuff;
         }
-    } ////////// NEW
-    if (row < 6 && col < 6 && board[row+1][col+1] == 1 && (board[row+2][col+2] == 9 || board[row+2][col+2] == 7)){
-        if ((board[row+2][col] != 8 || board[row+2][col] != 6) && board[row][col+2] != 6){
-            end = make_pair(row+1, col+1);
-            stuff.second.push_back(end);
-            return stuff;
-        }
-    }///////////////
+    }
+//    if (row < 6 && col < 6 && board[row+1][col+1] == 1 && (board[row+2][col+2] == 9 || board[row+2][col+2] == 7)){
+//        if ((board[row+2][col] != 8 || board[row+2][col] != 6) && board[row][col+2] != 6){
+//            end = make_pair(row+1, col+1);
+//            stuff.second.push_back(end);
+//            return stuff;
+//        }
+//    }
     
     // check safe move left in middle of board
-    if (row < 6 && col > 1 && board[row+1][col-1] == 1 && board[row+2][col-2] == 1) {
+    if (row < 6 && col > 1 && board[row+1][col-1] == 1 && board[row+2][col-2]%2 != 0) {
         if (board[row+2][col] == 1 && board[row][col-2] == 1){
             end = make_pair(row+1, col-1);
             stuff.second.push_back(end);
@@ -436,7 +479,7 @@ pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<
     }
     
     // if there are no good moves, return 6 to suggest finding the best move
-    if (stuff.first != 8){
+    if (stuff.first == 5){
         stuff.first = 6;
     }
     return find_best_move(board, stuff);
@@ -473,7 +516,7 @@ pair<int, vector<pair<int,int>> > det_NM(const vector<vector<int>>& board, const
     if (row < 6 && col > 1 && col < 6) {
         // if there is an X or a K to the left and right
         if ( (board[row+1][col+1] == 9 || board[row+1][col+1] == 7) && (board[row+1][col-1] == 9 || board[row+1][col-1] == 7) ){
-            return stuff;
+            return det_WGDJ(board, stuff);
         } // if there is an O or Q to the left and right AND the piece cannot be jumped
         if ( (board[row+1][col+1] != 9 || board[row+1][col+1] != 7) && (board[row+1][col-1] != 9 || board[row+1][col-1] != 7) && board[row+2][col+2] != 1 && board[row+2][col-2] != 1){
             return stuff;
@@ -609,6 +652,7 @@ pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair
     if (stuff.first == 8){
         return stuff;
     }
+    
     else{
         int row = stuff.second[0].first;
         int col = stuff.second[0].second;

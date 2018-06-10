@@ -15,7 +15,7 @@ Player::Player(int sym, int roy, const CheckBoard& check) : pieceCount(12), symb
                 location.push_back(p);
             }
         }
-    }
+    } // default locations
     Cur = location[0];
     New = Cur;
 }
@@ -82,47 +82,69 @@ void Player::getMoves() const {
     }
 }
 
+// pick a move and play it (For the AI)
 void Player::pickMove(CheckBoard& check, Player& playerO){
+    // point to the beginning of the map
     auto itr = moves.begin();
+    // point to the second element of the map
     auto it = ++moves.begin();
+    
+    // if no pieces can move then do nothing
     if ((*itr).first == 7){
         cout << "playerX cannot move.\n";
     }
+//    else if ((*itr).first > 2) {
+//        for (; itr != moves.end(); ++itr) {
+//            if ((*itr).first == 7){
+//                pair<int, vector<pair<int,int>> > tempP = *itr;
+//                tempP = det_WGDJ(check.getBoard(), tempP);
+//                if (tempP.first == 10){
+//
+//                }
+//            }
+//        }
+//    }
+    
+    // If there isn't a repeat of the key value (1,2,3..etc)
     else if ((*itr).first != (*it).first){
         if ((*itr).first == 1){
+            // if its a double jump
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
             check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
-        }
+        } // if its not a double jump
         else {
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
         }
 
-    }
-    else {
+    } // if there are repeats of the key value
+    else { // count the number of repeats
         size_t countRepeats = 0;
         while ((*itr).first == (*it).first && it != moves.end()){
             ++countRepeats;
             ++it;
-        }
+        } // pick a random one and play that move
         int r = 0 + rand() % countRepeats;
-        for (size_t i = 0; i < r; ++i){
+        for (size_t i = 1; i <= r; ++i){
             ++itr;
         }
-        if ((*itr).first == 1){
+        if ((*itr).first == 1){ // if its a double jump
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
             check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
         }
-        else {
+        else { // if its not a double jump
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
         }
     }
 }
 
+// displays player X's move to the user
 void Player::displayMove() const{
     cout << "piece " << Cur << " moved to " << New << endl;
 }
 
+// checkerboard constructor
 CheckBoard::CheckBoard() : nineCount(12), eightCount(12) {
+    // create the board
     vector<int> row1 = {0,9,0,9,0,9,0,9};
     vector<int> row2 = {9,0,9,0,9,0,9,0};
     vector<int> row3 = {0,9,0,9,0,9,0,9};
@@ -143,17 +165,17 @@ CheckBoard::CheckBoard() : nineCount(12), eightCount(12) {
 
 char CheckBoard::dis(int input) const{
     switch (input) {
-        case 0:
+        case 0: // null spot
             return '%';
-        case 1:
+        case 1: // free spot
             return ' ';
-        case 8:
+        case 8: // Player O piece
             return 'O';
-        case 9:
+        case 9: // Player X piece
             return 'X';
-        case 7:
+        case 7: // Player O royal
             return 'K';
-        case 6:
+        case 6: // Player X royal
             return 'Q';
         default:
             return ' ';
@@ -162,7 +184,7 @@ char CheckBoard::dis(int input) const{
 
 void
 
-
+// display the game board
 CheckBoard::display() const{
     cout << "    0   1   2   3   4   5   6   7\n";
     for (size_t i = 0; i < board.size(); ++i){
@@ -181,38 +203,52 @@ CheckBoard::display() const{
     cout << "  +---+---+---+---+---+---+---+---+\n";
 }
 
+// check if a spot is taken by a particular symbol
 bool CheckBoard::taken(int row, int col, int sym) const{
     return board[row][col] == sym;
 }
 
+// check if a piece got jumped
 void CheckBoard::didKill(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
+    // if the jumped spot was not free (and there was a piece there
     if (!((Nrow-Crow) == 1 || Nrow-Crow == -1)){
+        // find the location and removed the piece
         grave(Crow, Ccol, Nrow, Ncol, player);
     }
 }
 
+// update the board when a piece has moved
 void CheckBoard::move(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
+    // get the pieces symbol
     int sym = board[Crow][Ccol];
     
+    // if an O gets to the other side,
     if (sym == 8 && Nrow == 0){
-        sym = 6;
+        sym = 6; // Queen it
         ++player.royalCount;
-    }
+    } // if an X gets to the other side
     if (sym == 9 && Nrow == 7){
-        sym = 7;
+        sym = 7; // King it
         ++player.royalCount;
     }
+    // then update the board by making the old spot free
+    // and new spot taken by the symbol
     board[Crow][Ccol] = 1;
     board[Nrow][Ncol] = sym;
+    // update the player class as well with the new location
     player.Move(Crow, Ccol, Nrow, Ncol);
 }
 
+// take care of the jumped player
 void CheckBoard::RIP(int row, int col, Player& player){
+    // retrieve the player's symbol value
     int sym = board[row][col];
-    //cout << "RIP spot: (" << row << "," << col << ")\n";
+    // then free the spot
     board[row][col] = 1;
+    
     pair<int, int> p = make_pair(row, col);
-    switch (sym) {
+    switch (sym) { // depending on the symbol
+    // decrease piece count and remove it from the player class
         case 8:
             --eightCount;
             player.ate(p);
@@ -234,7 +270,9 @@ void CheckBoard::RIP(int row, int col, Player& player){
     }
 }
 
+// calculating the grave site
 void CheckBoard::grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
+    // grave location variables
     int RIProw = 0;
     int RIPcol = 0;
     if ((Nrow - Crow) >= 0){ // moved straight
@@ -249,49 +287,56 @@ void CheckBoard::grave(int Crow, int Ccol, int Nrow, int Ncol, Player& player){
     if ((Ncol - Ccol) < 0) { // moved left
         RIPcol = Ccol - 1;
     }
+    // take care of the jumped player
     RIP(RIProw, RIPcol, player);
 }
 
+// check if the move is valid
 bool CheckBoard::validMove(int Crow, int Ccol, int Nrow, int Ncol, Player& curPlayer, Player& opponent) {
+    // can't move another player's piece
     if (board[Crow][Ccol] == opponent.getRoy() || board[Crow][Ccol] == opponent.getSym()){
+        cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
         return false;
     }
-    
+    // can only move up to 2 rows at a time
     int shift = abs(Nrow-Crow);
     if (!(shift == 1 || shift == 2)){
         cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
         return false;
-    }
+    } //
     if (shift == 1 || shift == 2){
+        // if the piece is not the player's symbol value (i.e. 1 or 0)
         if (!(board[Crow][Ccol] == curPlayer.getSym() || board[Crow][Ccol] == curPlayer.getRoy())){
             cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
             return false;
-        }
+        } // if the new spot is not free
         if (board[Nrow][Ncol] != 1) {
             cout << "The move you entered was invalid.\nPlease re-enter a valid move.\n";
             return false;
         }
-    }
+    } // if the move is valid, update the board/player
     move(Crow, Ccol, Nrow, Ncol, curPlayer);
     didKill(Crow, Ccol, Nrow, Ncol, opponent);
     return true;
     
 }
 
+// retrieve the board
 vector<vector<int>> CheckBoard::getBoard() const{
     return board;
 }
 
+// check if someone lost
 bool CheckBoard::pieceCountZero() const{
-    if (nineCount == 0){
+    if (nineCount == 0){ // if Player X lost
         cout << "Player O won!";
         return true;
-    }
+    } // if Player O lost
     else if (eightCount == 0){
         cout << "Player X won!";
         return true;
     }
-    else{
+    else{ // no one has lost yet
         return false;
     }
 }

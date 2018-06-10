@@ -83,7 +83,6 @@ int main() {
             string quit = "";
             cout << "To quit, enter 'Q' or press any key to continue. ";
             getline(cin, quit);
-            getline(cin, quit);
             if (quit == "Q"){
                 keepGoing = false;
             } // if not keep going
