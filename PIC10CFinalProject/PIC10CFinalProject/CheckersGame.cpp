@@ -3,6 +3,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
+#include <iomanip>
 using namespace std;
 
 // player constructor
@@ -63,7 +64,7 @@ void Player::ate(const pair<int,int>& coord){
 void Player::det_moves(const vector<vector<int>>& board){
     
     moves.clear(); // clear past stored moves
-    pair<int, vector<pair<int,int>> > tempP;
+    pair<double, vector<pair<int,int>> > tempP;
     
     // for each piece
     for (size_t i = 0; i < location.size(); ++i){
@@ -93,17 +94,6 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
     if ((*itr).first == 7){
         cout << "playerX cannot move.\n";
     }
-//    else if ((*itr).first > 2) {
-//        for (; itr != moves.end(); ++itr) {
-//            if ((*itr).first == 7){
-//                pair<int, vector<pair<int,int>> > tempP = *itr;
-//                tempP = det_WGDJ(check.getBoard(), tempP);
-//                if (tempP.first == 10){
-//
-//                }
-//            }
-//        }
-//    }
     
     // If there isn't a repeat of the key value (1,2,3..etc)
     else if ((*itr).first != (*it).first){
@@ -112,7 +102,40 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
             check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
         } // if its not a double jump
+        
+        else if ((*itr).first >= 2 && (*itr).first < 3){
+            auto iter1 =  moves.begin();
+            auto iter2 =  moves.begin();
+            if ((*itr).second.size() == 3){
+                iter1 = Find(3, 5, itr->second[1]);
+                iter2 = Find(3, 5, itr->second[2]);
+            }
+            else {
+                iter1 = Find(3, 5, itr->second[2]);
+                iter2 = Find(3, 5, itr->second[3]);
+            }
+            double first1 = 2+(iter1->first)*0.1;
+            double first2 = 2+(iter2->first)*0.1;
+            if (iter1 != moves.end() && iter2 != moves.end()){
+                if ((first1 < first2 && first1 < itr->first) || first1 != 2.4){
+                   check.validMove(iter1->second[0].first, iter1->second[0].second, iter1->second[1].first, iter1->second[1].second, *this, playerO);
+                }
+                if ((first2 < first1 && first2 < itr->first) || first2 != 2.4){
+                    check.validMove(iter2->second[0].first, iter2->second[0].second, iter2->second[1].first, iter2->second[1].second, *this, playerO);
+                }
+            }
+            else if ((iter1 != moves.end() && first1 < itr->first) || (first1 != 2.4 && iter1 != moves.end())){
+                check.validMove(iter1->second[0].first, iter1->second[0].second, iter1->second[1].first, iter1->second[1].second, *this, playerO);
+            }
+            else if ((iter2 != moves.end() && first2 < itr->first) || (first2 != 2.4 && iter2 != moves.end())){
+                check.validMove(iter2->second[0].first, iter2->second[0].second, iter2->second[1].first, iter2->second[1].second, *this, playerO);
+            }
+            else {
+                check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+            }
+        }
         else {
+            cout << "hi";
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
         }
 
@@ -131,6 +154,37 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
             check.validMove(itr->second[1].first, itr->second[1].second, itr->second[2].first, itr->second[2].second, *this, playerO);
         }
+        else if ((*itr).first >= 2 && (*itr).first < 3){
+            auto iter1 =  moves.begin();
+            auto iter2 =  moves.begin();
+            if ((*itr).second.size() == 3){
+                iter1 = Find(3, 5, itr->second[1]);
+                iter2 = Find(3, 5, itr->second[2]);
+            }
+            else {
+                iter1 = Find(3, 5, itr->second[2]);
+                iter2 = Find(3, 5, itr->second[3]);
+            }
+            double first1 = 2+(iter1->first)*0.1;
+            double first2 = 2+(iter2->first)*0.1;
+            if (iter1 != moves.end() && iter2 != moves.end()){
+                if ((first1 < first2 && first1 < itr->first) || first1 != 2.4){
+                    check.validMove(iter1->second[0].first, iter1->second[0].second, iter1->second[1].first, iter1->second[1].second, *this, playerO);
+                }
+                if ((first2 < first1 && first2 < itr->first) || first2 != 2.4){
+                    check.validMove(iter2->second[0].first, iter2->second[0].second, iter2->second[1].first, iter2->second[1].second, *this, playerO);
+                }
+            }
+            else if ((iter1 != moves.end() && first1 < itr->first)|| (first1 != 2.4 && iter1 != moves.end())){
+                check.validMove(iter1->second[0].first, iter1->second[0].second, iter1->second[1].first, iter1->second[1].second, *this, playerO);
+            }
+            else if ((iter2 != moves.end() && first2 < itr->first)|| (first2 != 2.4 && iter2 != moves.end())){
+                check.validMove(iter2->second[0].first, iter2->second[0].second, iter2->second[1].first, iter2->second[1].second, *this, playerO);
+            }
+            else {
+                check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
+            }
+        }
         else { // if its not a double jump
             check.validMove(itr->second[0].first, itr->second[0].second, itr->second[1].first, itr->second[1].second, *this, playerO);
         }
@@ -140,6 +194,20 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
 // displays player X's move to the user
 void Player::displayMove() const{
     cout << "piece " << Cur << " moved to " << New << endl;
+}
+
+multimap<double, vector<pair<int,int>> >::iterator Player::Find(double key_lower_bound, double key_upper_bound, const pair<int,int>& coord){
+    auto it = moves.end();
+    for (auto itr = moves.begin(); itr != moves.end(); ++itr){
+        if (itr->first >= key_lower_bound && itr->first <= key_upper_bound){
+            for (size_t i = 0; i < itr->second.size(); ++i){
+                if (itr->second[i] == coord){
+                    return itr;
+                }
+            }
+        }
+    }
+    return it;
 }
 
 // checkerboard constructor
@@ -186,10 +254,10 @@ void
 
 // display the game board
 CheckBoard::display() const{
-    cout << "    0   1   2   3   4   5   6   7\n";
+    cout << "         0   1   2   3   4   5   6   7\n";
     for (size_t i = 0; i < board.size(); ++i){
-        cout << "  +---+---+---+---+---+---+---+---+\n";
-        cout << i << " ";
+        cout << "       +---+---+---+---+---+---+---+---+\n";
+        cout << "     " << i << " ";
         for (size_t j = 0; j < board.size(); ++j){
             if (board[i][j] == 0){
                 cout << "|%" << dis(board[i][j]) << "%";
@@ -200,7 +268,7 @@ CheckBoard::display() const{
         }
         cout << "|\n";
     }
-    cout << "  +---+---+---+---+---+---+---+---+\n";
+    cout << "       +---+---+---+---+---+---+---+---+\n\n";
 }
 
 // check if a spot is taken by a particular symbol

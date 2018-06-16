@@ -2,7 +2,7 @@
 This is a one player checkers game against the computer that is **displayed on the console**. The game will display the instructions and ask the user to enter in their move, since it is their turn first. Afterward the computer will make its move. The game continues until either the user quits or someone wins.
 
 ## Players:
-- The computer is `Player X` and the user is `Player O`.
+The computer is `Player X` and the user is `Player O`.
 
 ## Rules:
 - X and O pieces can only move in their respective forward diagonal direction.
@@ -30,6 +30,7 @@ This is a one player checkers game against the computer that is **displayed on t
     7 | O |%%%| O |%%%| O |%%%| O |%%%|
       +---+---+---+---+---+---+---+---+
       
-      
+## Code Documentation:
+`main.cpp` 
       
         

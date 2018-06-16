@@ -24,6 +24,7 @@ int main() {
     bool keepGoing = true;
     
     // display the board to the user
+    displayIntro();
     board.display();
     // variable makes the loop alternate between players
     size_t count = 1;

@@ -30,7 +30,7 @@ private:
     vector<pair<int, int>> location;
     
     // for the AI to keep track of moves
-    multimap<int, vector<pair<int,int>> > moves;
+    multimap<double, vector<pair<int,int>> > moves;
     
     /**
      updates the class when a piece is jumped
@@ -100,6 +100,9 @@ public:
     // make the classes friends
     friend CheckBoard;
     
+    multimap<double, vector<pair<int,int>> >::iterator Find(double key_lower_bound, double key_upper_bound, const pair<int,int>& coord);
+    
+    //void changeKey(multimap<double, vector<pair<int,int>> >::iterator itr);
 };
 
 class CheckBoard{
@@ -213,6 +216,11 @@ public:
     friend Player;
 };
 
+/**
+ displays the introduction instructions
+ */
+void displayIntro();
+
 //////////////////////////////////////////
 //      non-class (AI) functions!!!     //
 //////////////////////////////////////////
@@ -224,7 +232,7 @@ public:
  @param stuff , current info
  @return <1, piece location/moves> if the piece can jump, otherwise call det_WGDJ(board, stuff); and transerfer over the current info
  */
-pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<double, vector<pair<int,int>>>& stuff);
 
 /**
  deteremines if the piece will get double jumped
@@ -233,7 +241,7 @@ pair<int, vector<pair<int,int>> > det_DJ(const vector<vector<int>>& board, pair<
  @param stuff , current info
  @return <2, piece location/SAFE move> if the piece will get double jumped, otherwise call det_J(board, stuff); and transerfer over the current info
  */
-pair<int, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pair<double, vector<pair<int,int>>>& stuff);
 
 /**
  deteremines if the piece can jump the other player's piece
@@ -242,7 +250,7 @@ pair<int, vector<pair<int,int>> > det_WGDJ(const vector<vector<int>>& board, pai
  @param stuff , current info
  @return <3, piece location/move> if the piece can jump, otherwise call det_WGJ(board, stuff); and transerfer over the current info
  */
-pair<int, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<double, vector<pair<int,int>>>& stuff);
 
 /**
  deteremines if the piece will get jumped
@@ -251,7 +259,7 @@ pair<int, vector<pair<int,int>> > det_J(const vector<vector<int>>& board, pair<i
  @param stuff , current info
  @return <4, piece location/SAFE move> if the piece will get jumped, otherwise call det_SM(board, stuff); and transerfer over the current info
  */
-pair<int, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair<double, vector<pair<int,int>>>& stuff);
 
 /**
  determines if there is a safe move
@@ -260,7 +268,7 @@ pair<int, vector<pair<int,int>> > det_WGJ(const vector<vector<int>>& board, pair
  @param stuff , current info
  @return <5, piece location/move> if there is a safe move, otherwise call find_best_move(board, stuff); and transfer over the current info
  */
-pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<double, vector<pair<int,int>>>& stuff);
 
 /**
  find's the AI's best move
@@ -269,7 +277,9 @@ pair<int, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pair<
  @param stuff , reference of the container that holds current piece's location
  @return <6, piece location/move>, the same container with the best move
  */
-pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair<int, vector<pair<int,int>>>& stuff);
+pair<double, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair<double, vector<pair<int,int>>>& stuff);
+
+void pick_best_WGDJmove(vector<vector<int>> board, multimap<int, vector<pair<int,int>> > moves);
 
 /**
  determine if there are no moves
@@ -278,8 +288,7 @@ pair<int, vector<pair<int,int>> > find_best_move(vector<vector<int>> board, pair
  @param piece , piece being evaluated
  @return <7, piece location> if the piece cannot move, otherwise call det_DJ(stuff); and transfer over the current info (i.e. board and piece location)
  */
-pair<int, vector<pair<int,int>> > det_NM(const vector<vector<int>>& board, const pair<int,int>& piece);
-
+pair<double, vector<pair<int,int>> > det_NM(const vector<vector<int>>& board, pair<int,int>& piece);
 
 //////////////////////////////////////////
 //   non-class (overloaded) functions   //
