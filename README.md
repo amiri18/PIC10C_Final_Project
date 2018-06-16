@@ -29,8 +29,10 @@ The computer is `Player X` and the user is `Player O`.
       +---+---+---+---+---+---+---+---+
     7 | O |%%%| O |%%%| O |%%%| O |%%%|
       +---+---+---+---+---+---+---+---+
-      
+ 
+ 
 ## Code Documentation:
-`main.cpp` 
+For my final project I wanted to code another algorithm that worked similar to very basic artificial intelligence. I really enjoyed coding the "dealer" for the card game in the first homework, so I decided to create a checkers game where the user plays against the computer. As of right now the "computer" is not that smart and can be beaten, since it is hard to code for every situation as well as strategies. If I would have had more time, I would have made a better visual representation using Qt or a graphs class for windows instead of having the display on the console. As far as applying tops that we talked about in class, I explored using a multimap container as well as its iterators. I would have implemented lambdas, but almost all of the functions I wrote were very long. Here is a basic break down of my files:
+### `main.cpp`:
       
         

@@ -423,6 +423,73 @@ pair<double, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pa
     
     int row = stuff.second[0].first;
     int col = stuff.second[0].second;
+    
+    
+    /////////////////////////////////////////////////////////////
+    // if the piece is a K, need to check the opposite direction!
+    // check the bottom edges:
+    if (board[row][col] == 7) {
+        if (row == 1 && col == 0 && board[row-1][col+1] == 1){
+            end = make_pair(row-1, col+1);
+            stuff.second.push_back(end);
+            return stuff;
+        }
+        if (row == 1 && col > 0 && board[row-1][col+1] == 1){
+            end = make_pair(row-1, col+1);
+            stuff.second.push_back(end);
+            return stuff;
+        }
+        if (row == 1 && col > 0 && board[row-1][col-1] == 1){
+            end = make_pair(row-1, col-1);
+            stuff.second.push_back(end);
+            return stuff;
+        } // check safe move right in middle of board:
+        if (row > 1 && col < 6 && board[row-1][col+1] == 1 && (board[row-2][col+2] == 1 || board[row-2][col+2] == 8)) {
+            if (board[row-2][col] == 1 && board[row][col+2] == 1){
+                end = make_pair(row-1, col+1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if (board[row-2][col] != 1 && board[row][col+2] != 1){
+                end = make_pair(row-1, col+1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if (board[row-2][col] == 1 && (board[row][col+2] == 9 || board[row][col+2] == 7)){
+                end = make_pair(row-1, col+1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if ((board[row-2][col] == 9 || board[row-2][col] == 7) && board[row][col+2] == 1){
+                end = make_pair(row-1, col+1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+        } // check safe move left in middle of board
+        if (row > 1 && col > 1 && board[row-1][col-1] == 1 && (board[row-2][col-2] == 1 || board[row-2][col-2] == 8)) {
+            if (board[row-2][col] == 1 && board[row][col-2] == 1){
+                end = make_pair(row-1, col-1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if (board[row-2][col] != 1 && board[row][col-2] != 1){
+                end = make_pair(row-1, col-1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if (board[row-2][col] == 1 && (board[row][col-2] == 9 || board[row][col-2] == 7)){
+                end = make_pair(row-1, col-1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+            if ((board[row-2][col] == 9 || board[row-2][col] == 7) && board[row][col-2] == 1){
+                end = make_pair(row-1, col-1);
+                stuff.second.push_back(end);
+                return stuff;
+            }
+        }
+    }
+    
     // check the bottom edges:
     if (row == 6 && col == 7 && board[row+1][col-1] == 1){
         end = make_pair(row+1, col-1);
@@ -506,70 +573,6 @@ pair<double, vector<pair<int,int>> > det_SM(const vector<vector<int>>& board, pa
             end = make_pair(row+1, col-1);
             stuff.second.push_back(end);
             return stuff;
-        }
-    }
-    /////////////////////////////////////////////////////////////
-    // if the piece is a K, need to check the opposite direction!
-    // check the bottom edges:
-    if (board[row][col] == 7) {
-        if (row == 1 && col == 0 && board[row-1][col+1] == 1){
-            end = make_pair(row-1, col+1);
-            stuff.second.push_back(end);
-            return stuff;
-        }
-        if (row == 1 && col > 0 && board[row-1][col+1] == 1){
-            end = make_pair(row-1, col+1);
-            stuff.second.push_back(end);
-            return stuff;
-        }
-        if (row == 1 && col > 0 && board[row-1][col-1] == 1){
-            end = make_pair(row-1, col-1);
-            stuff.second.push_back(end);
-            return stuff;
-        } // check safe move right in middle of board:
-        if (row > 1 && col < 6 && board[row-1][col+1] == 1 && (board[row-2][col+2] == 1 || board[row-2][col+2] == 8)) {
-            if (board[row-2][col] == 1 && board[row][col+2] == 1){
-                end = make_pair(row-1, col+1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if (board[row-2][col] != 1 && board[row][col+2] != 1){
-                end = make_pair(row-1, col+1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if (board[row-2][col] == 1 && (board[row][col+2] == 9 || board[row][col+2] == 7)){
-                end = make_pair(row-1, col+1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if ((board[row-2][col] == 9 || board[row-2][col] == 7) && board[row][col+2] == 1){
-                end = make_pair(row-1, col+1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-        } // check safe move left in middle of board
-        if (row > 1 && col > 1 && board[row-1][col-1] == 1 && (board[row-2][col-2] == 1 || board[row-2][col-2] == 8)) {
-            if (board[row-2][col] == 1 && board[row][col-2] == 1){
-                end = make_pair(row-1, col-1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if (board[row-2][col] != 1 && board[row][col-2] != 1){
-                end = make_pair(row-1, col-1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if (board[row-2][col] == 1 && (board[row][col-2] == 9 || board[row][col-2] == 7)){
-                end = make_pair(row-1, col-1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
-            if ((board[row-2][col] == 9 || board[row-2][col] == 7) && board[row][col-2] == 1){
-                end = make_pair(row-1, col-1);
-                stuff.second.push_back(end);
-                return stuff;
-            }
         }
     }
     

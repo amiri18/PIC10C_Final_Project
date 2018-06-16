@@ -193,7 +193,7 @@ void Player::pickMove(CheckBoard& check, Player& playerO){
 
 // displays player X's move to the user
 void Player::displayMove() const{
-    cout << "piece " << Cur << " moved to " << New << endl;
+    cout << "Player X's piece " << Cur << " moved to " << New << ".\n";
 }
 
 multimap<double, vector<pair<int,int>> >::iterator Player::Find(double key_lower_bound, double key_upper_bound, const pair<int,int>& coord){

@@ -37,7 +37,7 @@ int main() {
             do { // do while the user inters a valid move
                 
                 // ask the user to enter in move
-                cout << "Where do you want to move Player O?\nCurrent Row and Current Column: ";
+                cout << "\n\nWhere do you want to move Player O?\nCurrent Row and Current Column: ";
                 cin >> Crow >> Ccol; // current location
                 cout << "New Row and New Col: ";
                 cin >> Nrow >> Ncol; // new location
@@ -54,13 +54,13 @@ int main() {
                 }
             }
             while (!board.validMove(Crow, Ccol, Nrow, Ncol, playerO, playerX));
-            
+            cout << endl;
             // display the board with the moved piece
             board.display();
             
             // if the user wants to stop the game, enter 'Q'
             string quit = "";
-            cout << "To quit, enter 'Q' or press any key to continue. ";
+            cout << "To quit, type5 Q or press enter to continue. ";
             getline(cin, quit);
             getline(cin, quit);
             if (quit == "Q"){
@@ -70,19 +70,19 @@ int main() {
         }
         
         else { // the AI's turn during even numbers
-            cout << "It's playerX's move: \n";
+            cout << "It's Player X's move: \n\n";
             // determine all moves on the current game board
             playerX.det_moves(board.getBoard());
-            playerX.getMoves(); // debugging feature for now
+            // -----> playerX.getMoves(); // debugging feature for now
             // pick the best move
             playerX.pickMove(board, playerO);
             // display the board with the new move
             board.display();
-            playerX.displayMove();
+            playerX.displayMove(); 
             
             // if the user wants to stop the game, enter 'Q'
             string quit = "";
-            cout << "To quit, enter 'Q' or press any key to continue. ";
+            cout << "To quit, type Q or press enter to continue. ";
             getline(cin, quit);
             if (quit == "Q"){
                 keepGoing = false;
