@@ -19,39 +19,54 @@ These files contain the declarations and definitions for the `Player` class and 
 |   X   |   O   |   K   |   Q   |        |    %   |
 
 This way when using a switch statement, it is easy to print the board, since it is stored in a 2-D vector of type: `std::vector<vector<int,int>>` in the CheckBoard class, that looks like:
-            {0,9,0,9,0,9,0,9}
-            {9,0,9,0,9,0,9,0}
-            {0,9,0,9,0,9,0,9}
-            {1,0,1,0,1,0,1,0}
-            {0,1,0,1,0,1,0,1}
-            {8,0,8,0,8,0,8,0}
-            {0,8,0,8,0,8,0,8}
-            {8,0,8,0,8,0,8,0}
-and calling the `display()` function prints:
-            `  0   1   2   3   4   5   6   7
-            +---+---+---+---+---+---+---+---+
-        0 |%%%| X |%%%| X |%%%| X |%%%| X |
-            +---+---+---+---+---+---+---+---+
-        1 | X |%%%| X |%%%| X |%%%| X |%%%|
-            +---+---+---+---+---+---+---+---+
-        2 |%%%| X |%%%| X |%%%| X |%%%| X |
-            +---+---+---+---+---+---+---+---+
-        3 |   |%%%|   |%%%|   |%%%|   |%%%|
-            +---+---+---+---+---+---+---+---+
-        4 |%%%|   |%%%|   |%%%|   |%%%|   |
-            +---+---+---+---+---+---+---+---+
-        5 | O |%%%| O |%%%| O |%%%| O |%%%|
-            +---+---+---+---+---+---+---+---+
-        6 |%%%| O |%%%| O |%%%| O |%%%| O |
-            +---+---+---+---+---+---+---+---+
-        7 | O |%%%| O |%%%| O |%%%| O |%%%|
-            +---+---+---+---+---+---+---+---+`
 
+      {0,9,0,9,0,9,0,9}
+      {9,0,9,0,9,0,9,0}
+      {0,9,0,9,0,9,0,9}
+      {1,0,1,0,1,0,1,0}
+      {0,1,0,1,0,1,0,1}
+      {8,0,8,0,8,0,8,0}
+      {0,8,0,8,0,8,0,8}
+      {8,0,8,0,8,0,8,0}
+and calling the `display()` function prints:
+
+         0   1   2   3   4   5   6   7
+       +---+---+---+---+---+---+---+---+
+     0 |%%%| X |%%%| X |%%%| X |%%%| X |
+       +---+---+---+---+---+---+---+---+
+     1 | X |%%%| X |%%%| X |%%%| X |%%%|
+       +---+---+---+---+---+---+---+---+
+     2 |%%%| X |%%%| X |%%%| X |%%%| X |
+       +---+---+---+---+---+---+---+---+
+     3 |   |%%%|   |%%%|   |%%%|   |%%%|
+       +---+---+---+---+---+---+---+---+
+     4 |%%%|   |%%%|   |%%%|   |%%%|   |
+       +---+---+---+---+---+---+---+---+
+     5 | O |%%%| O |%%%| O |%%%| O |%%%|
+       +---+---+---+---+---+---+---+---+
+     6 |%%%| O |%%%| O |%%%| O |%%%| O |
+       +---+---+---+---+---+---+---+---+
+     7 | O |%%%| O |%%%| O |%%%| O |%%%|
+       +---+---+---+---+---+---+---+---+
 The player class also stores the number of regular pieces and the number of royal pieces as well as their locations on the board (in coordinate pairs) using a `std::vector<pair<int,int>>`. The class stores all the possible/potenial moves of each piece in an `std::multipmap`, which is only used for Player X (the computer). I decided to use a multimap because it can sort the each piece and its moves by their "rank." The multimap I used is type  `std::pair<double, vector<pair<int,int>>>`, meaning that its "keys" are the ranks and its "values" are vectors that hold the moves which are coordinate pairs of locations on the board (this and the ranking of the moves will be explained later). The Player class has functions that update the piece locations/terminations when either the user or the computer moves. The class also has functions specifically for Player X which determind all moves and pick the best one. Because there are very specific functionalities for Player X (the computer), I think, in the future, it would be best to make it a derived class in order to conserve memory.
 
 The CheckBoard class mainly stores the gameboard, and has accessor functions which display it and mutator functions which either update it when a player moves, checks if they picked a valid move, and takes care of "killed" pieces. Functions that are made private, are called by other functions in the main routine (mentioned above), so there is no reason to call them publically.
 
 *Note: Please read the function documentation within the header file for a better understanding of how both classes work independently and together.*
 ### `CheckAI.cpp`
-      
-*Note: Not everything is commented, since there is (all together) around 2000 lines of code.*
+This file contains all the fucntions used by Player X, also referred to as the "AI functions." In order to determine the best moves and rank them there is a system:
+First `det_NM` (determine no moves) is called which sees if the piece can move. If the piece **can** move, the function `det_DJ` is called from within `det_NM` (determine double jump) which checks to see if the piece can jump two of  Player O's pieces. If the piece can **can**, it stores the moves in vector within the multimap and gives it a key value (rank) of 1 (the highest ranking). If the piece **cannot**, the function `det_WGDJ` (determine will get double jumped) is called from `det_DJ`. If the piece **will** get double jumped, the free spots are saved in the vector and the key value is set to 2. Then function `find_best_move` is called (however later on after all the pieces are set, this can be overrided if the function `Find` finds a better alternative move by a different piece to block the double jump). If the piece **will not** get double jumped, the function `det_J` (determine jump) is  called from `det_WGDJ`. If the piece **can** jump one of Player O's pieces, the move is stored in the vector and the key value is set to 3. If the piece **cannot** jump, the function `det_WGJ` (will get jumped) is called from `det_J`. If the piece **will** get jumped by Player O, calls `find_best_move` and sets the key value to 4. If the piece **will not** get jumped, the function `det_SM` (determine safe move) is called from `det_WGJ`. If **there is** a safe move, the move is stored and key value is set to 5. If **there is not** a safe move, the key value is set to 6 and the function `find_best_move` is called fron `det_SM`.  And lastly, if the piece **cannot** move (and none of these other functions were called), the its is given an initial ranking of 7 (the lowest ranking), but then checks to see if it can get doubled jumped/jumped.
+Summary of move rankings:
+
+| Can Double Jump | Will Get Double Jumped | Can Jump | Will Get Jumped | Safe Move | Risky Move | Cannot Move |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+
+The function `find_best_move`, is a coded algorithm that determines either the piece's only option to move and stores it, OR uses **recursion** to find the better move out of two potential ones. It does this by creating two temporary pieces and running them through the `det_NM` algorithm. The piece that returns with the higher ranking, that move get's played. In a way this is how the computer can "see" into the future. If this algorithm was called several more times, it could potential see several moves ahead and make more safisticated moves. This could be something to experiment with later.
+
+
+
+
+
+
+*Note: Not everything is commented, since there is (all together) around 2000 lines of code and constantly being updated/changed.*
