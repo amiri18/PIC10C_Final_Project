@@ -19,14 +19,14 @@ These files contain the declarations and definitions for the `Player` class and 
 |   X   |   O   |   K   |   Q   |        |    %   |
 
 This way when using a switch statement, it is easy to print the board, since it is stored in a 2-D vector of type: `std::vector<vector<int,int>>` in the CheckBoard class, that looks like:
-           `{0,9,0,9,0,9,0,9}
+            {0,9,0,9,0,9,0,9}
             {9,0,9,0,9,0,9,0}
             {0,9,0,9,0,9,0,9}
             {1,0,1,0,1,0,1,0}
             {0,1,0,1,0,1,0,1}
             {8,0,8,0,8,0,8,0}
             {0,8,0,8,0,8,0,8}
-            {8,0,8,0,8,0,8,0}`
+            {8,0,8,0,8,0,8,0}
 and calling the `display()` function prints:
             `  0   1   2   3   4   5   6   7
             +---+---+---+---+---+---+---+---+
