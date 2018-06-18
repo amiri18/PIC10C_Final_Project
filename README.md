@@ -58,10 +58,10 @@ This file contains all the fucntions used by Player X, also referred to as the "
 
 - First `det_NM` (determine no moves) is called which sees if the piece can move. If the piece **can** move, the function `det_DJ` (determine double jump) is called from within `det_NM` which checks to see if the piece can jump two of  Player O's pieces.
     - If the piece **can** double jump Player O's pieces, the moves are stored in the vector within the multimap and gives it a key (rank) of 1 (the highest ranking). If the piece **cannot** double jump, the function `det_WGDJ` (determine will get double jumped) is called from within `det_DJ`.
-        - If the piece **will** get double jumped, the free spots are saved in the vector and the key is set to 2. Then function `find_best_move` is called (however, later on after all the pieces are set, this can be over written if the function `Find` finds a better move by a different piece to block the double jump). If the piece **will not** get double jumped, the function `det_J` (determine jump) is  called from within `det_WGDJ`.
-            - If the piece **can** jump one of Player O's pieces, the move is stored in the vector and the key is set to 3. If the piece **cannot** jump, the function `det_WGJ` (will get jumped) is called from within `det_J`.
-                    - If the piece **will** get jumped by Player O, the function `find_best_move` is called and the key is set to 4. If the piece **will not** get jumped, the function `det_SM` (determine safe move) is called from within `det_WGJ`.
-                        - If **there is** a safe move, the move is stored and key is set to 5. If **there is not** a safe move, the key is set to 6 and the function `find_best_move` is called from within `det_SM`.
+    - If the piece **will** get double jumped, the free spots are saved in the vector and the key is set to 2. Then function `find_best_move` is called (however, later on after all the pieces are set, this can be over written if the function `Find` finds a better move by a different piece to block the double jump). If the piece **will not** get double jumped, the function `det_J` (determine jump) is  called from within `det_WGDJ`.
+    - If the piece **can** jump one of Player O's pieces, the move is stored in the vector and the key is set to 3. If the piece **cannot** jump, the function `det_WGJ` (will get jumped) is called from within `det_J`.
+    - If the piece **will** get jumped by Player O, the function `find_best_move` is called and the key is set to 4. If the piece **will not** get jumped, the function `det_SM` (determine safe move) is called from within `det_WGJ`.
+    - If **there is** a safe move, the move is stored and key is set to 5. If **there is not** a safe move, the key is set to 6 and the function `find_best_move` is called from within `det_SM`.
 - And lastly, if the piece **cannot** move (and none of these other functions were called), then the piece is given an initial ranking of 7 (the lowest ranking), but then checks to see if it can get doubled jumped/jumped.
 
 #### Summary of move rankings:
@@ -74,10 +74,6 @@ This file contains all the fucntions used by Player X, also referred to as the "
 The function `find_best_move`, is a coded algorithm that determines either the piece's only option to move and stores it, OR uses **recursion** to find the better move out of two potential ones. It does this by creating two temporary pieces and running them through the `det_NM` algorithm. The piece that returns with the higher ranking, that move get's played.
 
 In a way this is how the computer can "see" into the future. If this algorithm was called several more times, it could potential see several moves ahead and make more sophisticated moves. This could be something to experiment with later.
-
-
-
-
-
-
+#
+#
 *Note: Not everything is commented, since there is (all together) around 2000 lines of code which are constantly being updated/changed.*
