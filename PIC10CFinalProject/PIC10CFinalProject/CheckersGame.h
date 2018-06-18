@@ -97,12 +97,17 @@ public:
      display's the player's move
      */
     void displayMove() const;
+    
+    /**
+     AI helper function: checks to see if there is a other pieces can block a double jump attack
+     
+     @param key_lower_bound , best rank desired (i.e. 3)
+     @param key_upper_bound , lowest rank desired (i.e. 5)
+     @param coord , move to look for (see if a different key and fill this blank spot)
+     */
+    multimap<double, vector<pair<int,int>> >::iterator Find(double key_lower_bound, double key_upper_bound, const pair<int,int>& coord);
     // make the classes friends
     friend CheckBoard;
-    
-    multimap<double, vector<pair<int,int>> >::iterator Find(double key_lower_bound, double key_upper_bound, const pair<int,int>& coord);
-    
-    //void changeKey(multimap<double, vector<pair<int,int>> >::iterator itr);
 };
 
 class CheckBoard{
@@ -115,7 +120,7 @@ private:
     vector<vector<int>> board;
     
     /**
-     helper function of display which takens in a board value and returns its respective char:
+     SWITCH STATEMENT FUNCTION --> helper function of display which takens in a board value and returns its respective char:
      (9->'X', 8->'O', 7->'K', 6->'Q', 0 ->'%', and 1->' '
      @param input , value
      @return the char
